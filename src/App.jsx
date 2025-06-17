@@ -13,6 +13,8 @@ const App = () => {
   const[section, setSection] = useState('Mind');
   const[incompleteTasks, setIncompleteTasks] = useState([]);
   const[completedTasks, setCompletedTasks] = useState([]);
+  const [thoughts, setThoughts] = useState([]);
+
 
   const loadTasks = async () => {
     try {
@@ -42,6 +44,7 @@ const App = () => {
       console.error('Error adding task:', error);
     }
   };
+
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -53,7 +56,7 @@ const App = () => {
               {section}
             </div>
             <div>
-              <SuggestTask/>
+              <SuggestTask thoughts={thoughts} incompleteTasks={incompleteTasks}/>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white/70backdrop-blur-xl p-6 rounded-2xl shadow-sm font-medium text-xl text-center border border-gray-100/50 hover:bg-white/80 transition-all duration-300">
@@ -62,7 +65,7 @@ const App = () => {
                 </div>
                 <div className="mt-4 max-h-[400px] overflow-y-auto px-4">
                   <div className="space-y-4">
-                    <NoteCard />
+                    <NoteCard thoughts={thoughts} setThoughts={setThoughts} />
                   </div>
                 </div>
               </div>

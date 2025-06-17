@@ -2,12 +2,21 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from transformers import pipeline
-from typing import Dict, Any
+from typing import Dict, Any, List
+from openai import OpenAI
+from dotenv import load_dotenv
+import os
+
+load_dotenv('../.env.local')  # Look in parent directory
+api_key = os.getenv('OPENAI_API_KEY')
+print("API Key found:", "Yes" if api_key else "No")
+if not api_key:
+    raise ValueError("OPENAI_API_KEY environment variable is not set. Please check your .env.local file.")
 
 # Create FastAPI app
 app = FastAPI(
-    title="Emotion Analysis API",
-    description="API for analyzing emotions in text using DistilRoBERTa",
+    title="Life Tracker API",
+    description="API for emotion analysis and task suggestions",
     version="1.0.0"
 )
 
@@ -33,6 +42,10 @@ except Exception as e:
     print(f"Error initializing model: {str(e)}")
     raise
 
+# Initialize OpenAI client
+client = OpenAI(api_key=api_key)
+
+# Request Models
 class TextRequest(BaseModel):
     """Request model for text analysis"""
     text: str
@@ -44,6 +57,12 @@ class TextRequest(BaseModel):
             }
         }
 
+class TaskSuggestionRequest(BaseModel):
+    """Request model for task suggestions"""
+    thoughts: List[str]
+    tasks: List[str]
+
+# Emotion Analysis Routes
 @app.post("/analyze", response_model=Dict[str, Any])
 async def analyze_emotion(req: TextRequest) -> Dict[str, Any]:
     """
@@ -67,6 +86,45 @@ async def analyze_emotion(req: TextRequest) -> Dict[str, Any]:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error analyzing text: {str(e)}")
 
+# Task Suggestion Routes
+@app.post("/suggest-task")
+async def suggest_task(data: TaskSuggestionRequest):
+    """
+    Generate a task suggestion based on thoughts and existing tasks.
+    
+    Args:
+        data (TaskSuggestionRequest): The thoughts and tasks to analyze
+        
+    Returns:
+        Dict[str, str]: The suggested task
+    """
+    thought_lines = '\n- '.join(data.thoughts)
+    task_lines = '\n- '.join(data.tasks)
+    prompt = f"""
+You are an intelligent assistant that helps organize unstructured thoughts and tasks into a focused action item. Given the following inputs, analyze and synthesize them into a single, meaningful suggested task that helps move things forward.
+
+Inputs:
+Thoughts:
+- {thought_lines}
+
+Tasks:
+- {task_lines}
+
+Your job:
+1. Understand the intent and priorities behind the thoughts and tasks.
+2. Output a single suggested task that would have the most meaningful impact.
+3. Be specific and action-oriented.
+
+Respond with only the suggested task.
+"""
+    response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    suggestion = response.choices[0].message.content
+    return {"suggestedTask": suggestion}
+
+# Health Check Route
 @app.get("/health")
 async def health_check() -> Dict[str, str]:
     """Health check endpoint"""

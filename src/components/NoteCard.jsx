@@ -21,8 +21,7 @@ const gradientEndColors = {
   disgust: "#A5D6A7"
 }
 
-const NoteCard = () => {
-  const [thoughts, setThoughts] = useState([])
+const NoteCard = ({thoughts,setThoughts}) => {
   const [currentThought, setCurrentThought] = useState('')
   const [isLoading, setIsLoading] = useState(true)
 
