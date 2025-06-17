@@ -38,11 +38,8 @@ export default function Header({setSection}) {
                         <button onClick={() => handleClick('Mind')} className="hover:bg-gray-100 hover:cursor-pointer min-w-[120px] min-h-[50px] bg-white/70 backdrop-blur-xl text-gray-600 hover:text-gray-900 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border border-gray-100/50 shadow-sm">
                             Mind
                         </button>
-                        <button onClick={() => handleClick('Body')} className="hover:bg-gray-100 hover:cursor-pointer min-w-[120px] bg-white/70 backdrop-blur-xl  text-gray-600 hover:text-gray-900 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border border-gray-100/50 shadow-sm">
-                            Body
-                        </button>
-                        <button onClick={() => handleClick('Connection')} className="hover:bg-gray-100 hover:cursor-pointer min-w-[120px] bg-white/70 backdrop-blur-xl text-gray-600 hover:text-gray-900 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border border-gray-100/50 shadow-sm">
-                            Connection
+                        <button onClick={() => handleClick('Insights')} className="hover:bg-gray-100 hover:cursor-pointer min-w-[120px] bg-white/70 backdrop-blur-xl  text-gray-600 hover:text-gray-900 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border border-gray-100/50 shadow-sm">
+                            Insights 
                         </button>
                     </nav>
 

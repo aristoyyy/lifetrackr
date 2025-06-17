@@ -1,4 +1,4 @@
-import {addDoc, collection, deleteDoc, getDocs, query} from 'firebase/firestore';
+import {addDoc, collection, deleteDoc, getDocs, query, doc} from 'firebase/firestore';
 import {db} from './config';
 
 // Collection name
@@ -32,7 +32,7 @@ export const getThoughts = async () => {
 
 export const deleteThought = async (thoughtId) => {
     try{
-        await deleteDoc((db, THOUGHT_COLLECTION, thoughtId));
+        await deleteDoc(doc(db, THOUGHT_COLLECTION, thoughtId));
     }
     catch(error){
         console.log(error);

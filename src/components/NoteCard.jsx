@@ -2,14 +2,24 @@ import React, {useEffect, useState} from 'react'
 import {addThought, deleteThought, getThoughts} from "../firebase/thoughtService.js"
 
 const pastelEmotionColors = {
-  joy: "#FFF4A3",      // pastel yellow, a bit richer
-  neutral: "#CCCCCC",  // soft mid gray
-  surprise: "#A9D8FF", // brighter pastel blue
-  sadness: "#8FAADC",  // medium pastel steel blue
-  anger: "#F7BABA",    // warm pastel red/pink
-  fear: "#CBA4FF",     // deeper pastel purple
-  disgust: "#AED9A7"   // medium pastel green
+  joy: "#FFF9C4",      // Very light, soft yellow for joy start
+  neutral: "#E0E0E0",  // Light Gray - for gray-like gradient start
+  surprise: "#BBDEFB", // Light Blue - for blue-like gradient start
+  sadness: "#BBDEFB",  // Default to blue gradient if no emotion
+  anger: "#FFCDD2",    // Light Red
+  fear: "#B39DDB",     // Light Purple
+  disgust: "#C8E6C9"   // Light Green
 };
+
+const gradientEndColors = {
+  joy: "#FFECB3",      // Slightly deeper, but still soft yellow for joy end
+  neutral: "#9E9E9E",  // Medium Gray
+  surprise: "#64B5F6", // Medium Blue
+  sadness: "#64B5F6",
+  anger: "#E57373",
+  fear: "#7986CB",
+  disgust: "#A5D6A7"
+}
 
 const NoteCard = () => {
   const [thoughts, setThoughts] = useState([])
@@ -71,8 +81,8 @@ const NoteCard = () => {
   }, [])
 
   return (
-    <div >
-      <div className="flex items-center w-full border-b border-gray-100/50">
+    <div className="w-full">
+      <div className="flex items-center w-full bg-white rounded-full border border-gray-200 shadow-sm overflow-hidden mb-4">
         <input
           type="text"
           value={currentThought}
@@ -85,41 +95,44 @@ const NoteCard = () => {
         <button
           onClick={handleSubmit}
           disabled={isLoading || !currentThought.trim()}
-          className="px-4 py-3 bg-white/70 backdrop-blur-sm border-l border-gray-100/50 text-gray-600 hover:text-gray-900 text-sm font-medium hover:bg-white/80 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-5 py-3 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Add
         </button>
       </div>
       
-      <div className="p-6">
+      <div className="p-2">
         {isLoading ? (
           <div className="text-center text-gray-500">Loading thoughts...</div>
         ) : (
-          <div className="space-y-6">
-            {thoughts.map((thought) => (
-              <div
-                key={thought.id}
-                style={{ 
-                  backgroundColor: pastelEmotionColors[thought.emotion],
-                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05)'
-                }}
-                className="font-medium group relative backdrop-blur-sm border border-gray-100/50 p-6 rounded-[2rem] hover:scale-105 transition-all duration-300 hover:shadow-xl"
-              >
-                <p className="text-gray-700 group-hover:text-gray-900 transition-colors duration-300 leading-relaxed">
-                  {thought.thought}
-                </p>
-                <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button
-                    onClick={() => handleDelete(thought.id)}
-                    className="text-gray-400 hover:text-gray-600 transition-colors duration-300"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </button>
+          <div className="space-y-4">
+            {thoughts.map((thought) => {
+              const startColor = pastelEmotionColors[thought.emotion] || pastelEmotionColors.sadness;
+              const endColor = gradientEndColors[thought.emotion] || gradientEndColors.sadness;
+              return (
+                <div
+                  key={thought.id}
+                  style={{ 
+                    background: `linear-gradient(to right, ${startColor}, ${endColor})`,
+                  }}
+                  className="font-medium group relative p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105 flex justify-center items-center cursor-pointer text-gray-900"
+                >
+                  <p className="leading-relaxed text-center">
+                    {thought.thought}
+                  </p>
+                  <div className="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button
+                      onClick={() => handleDelete(thought.id)}
+                      className="text-gray-600 hover:text-gray-800 transition-colors duration-300"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
