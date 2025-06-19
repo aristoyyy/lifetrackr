@@ -84,7 +84,7 @@ const App = () => {
           </div>
         </main>
       )}
-      {section === 'Insights' && <Insights />}
+      {section === 'Insights' && <Insights thoughts={thoughts} incompleteTasks={incompleteTasks} completedTasks={completedTasks}/>}
     </div>
   )
 }

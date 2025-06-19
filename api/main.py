@@ -9,7 +9,6 @@ import os
 
 load_dotenv('../.env.local')  # Look in parent directory
 api_key = os.getenv('OPENAI_API_KEY')
-print("API Key found:", "Yes" if api_key else "No")
 if not api_key:
     raise ValueError("OPENAI_API_KEY environment variable is not set. Please check your .env.local file.")
 
@@ -118,11 +117,38 @@ Your job:
 Respond with only the suggested task.
 """
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}]
     )
     suggestion = response.choices[0].message.content
     return {"suggestedTask": suggestion}
+
+@app.post("/insight-summary")
+async def give_insight_summary(data: TaskSuggestionRequest):
+    thought_lines = '\n- '.join(data.thoughts)
+    task_lines = '\n- '.join(data.tasks)
+
+    prompt = f"""
+    You are an intelligent assistant that helps organize unstructured thoughts and tasks into a focused action item. Given the following inputs, analyze and synthesize them into a summary of insights into their minds that they otherwise may not realize. 
+    
+    Inputs:
+    Thoughts:{thought_lines}
+    Tasks:{task_lines}
+    
+    Your Job: 
+    1. Understand the mind of the user, analyzing for trends in their thought process and the reasoning behind these thoughts.
+    2. Output a single paragraph outlining these insights, prioritizing give insights that they otherwise may not realize on their own. 
+    3. Refrain from using language such as "the user" or "this person", instead saying "you" and "you're". Speak directly to the person.
+    """
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    insights = response.choices[0].message.content
+    return insights
+
 
 # Health Check Route
 @app.get("/health")

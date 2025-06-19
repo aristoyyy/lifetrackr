@@ -8,11 +8,6 @@ const SuggestTask = ({thoughts, incompleteTasks}) => {
         const thoughtTexts = thoughts.map(t => t.thought || '');
         const taskTexts = incompleteTasks.map(t => t.name || '');
         
-        console.log("Sending to backend:", {
-            thoughts: thoughtTexts,
-            tasks: taskTexts
-        });
-
         const res = await fetch('http://localhost:8000/suggest-task', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -28,7 +23,6 @@ const SuggestTask = ({thoughts, incompleteTasks}) => {
     const loadSuggestedTask = async () => {
         try {
             const fetchedTask = await getSuggestedTask();
-            console.log(`fetched task: ${fetchedTask}`);
             setSuggestedTask(fetchedTask);
         } catch (error) {
             console.error('Error loading suggested task:', error)
@@ -44,7 +38,7 @@ const SuggestTask = ({thoughts, incompleteTasks}) => {
             {(suggestedTask ?? '') !== '' &&
                 <div className="bg-white/70 backdrop-blur-xl p-6 rounded-2xl shadow-sm font-medium text-xl text-center border border-gray-100/50 hover:bg-white/80 transition-all duration-300">
                     <div className="flex justify-between items-center mb-4">
-                        <p className="text-2xl bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent font-bold">Suggested Task</p>
+                        <p className="text-2xl bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent font-bold">Suggested Course of Action</p>
                     </div>
                     <div className="flex items-center space-x-4">
                         <div
@@ -55,9 +49,6 @@ const SuggestTask = ({thoughts, incompleteTasks}) => {
                         >
                             <p className="leading-relaxed">{suggestedTask}</p>
                         </div>
-                        <button className="px-5 py-3 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-sm font-medium rounded-full shadow-sm">
-                            Add Task
-                        </button>
                     </div>
                 </div>
             }
