@@ -1,12 +1,18 @@
-# React + Vite
+# LifeTrackr
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+LifeTrackr is a modern web application designed to help you organize your thoughts and tasks in one place. With a clean, intuitive interface, it makes managing your daily life simple and efficient.
 
-Currently, two official plugins are available:
+![LifeTracker Screenshot](https://via.placeholder.com/800x450?text=LifeTracker+Screenshot)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Task Management**: Create, track, and complete tasks with due dates
+- **Thought Capture**: Record your thoughts and ideas in one place
+- **Visual Priority System**: Clear visual indicators for task priority and status
+- **Insights**: View analytics about your tasks and productivity
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Technology Stack
+
+- **Frontend**: React, TailwindCSS
+- **Backend**: Firebase (Authentication, Firestore), FastAPI(agentic reasoning for mood/thought insights)
