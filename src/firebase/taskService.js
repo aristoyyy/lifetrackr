@@ -32,7 +32,8 @@ export const completeTask = async (taskId) => {
     try {
         const taskRef = doc(db, MIND_COLLECTION, taskId);
         await updateDoc(taskRef, {
-            is_complete: true
+            is_complete: true,
+            completed_date: new Date().toISOString()
         });
         return taskRef.id;
     } catch (error) {
@@ -90,5 +91,15 @@ export const deleteIncompleteTask = async (taskId) => {
         await deleteDoc(doc(db, MIND_COLLECTION, taskId));
     } catch(error){
         console.log(error);
+    }
+}
+
+export const deleteCompletedTask = async (taskId) => {
+    try {
+        await deleteDoc(doc(db, MIND_COLLECTION, taskId));
+        return true;
+    } catch (error) {
+        console.error('Error deleting completed task:', error);
+        throw error;
     }
 }
